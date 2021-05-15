@@ -2,6 +2,9 @@
 
 #include "SFML/Window/VideoMode.hpp"
 
+#include <cstdlib>
+#include <cmath>
+
 // Global Variables for borders()
 // desktopTemp gets screen resolution of PC running the program
 sf::VideoMode desktopTemp = sf::VideoMode::getDesktopMode();
