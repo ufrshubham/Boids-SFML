@@ -2,6 +2,10 @@
 
 A boids simulation made using C++ and SFML.
 
+## Demo
+
+![Boids-Demo](.github/boids-demo.gif)
+
 ## Requirements
 
 - C++ compiler with support for C++14 (MSVC and GCC are actively tested).
