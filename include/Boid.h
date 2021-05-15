@@ -5,6 +5,9 @@
 
 #include <vector>
 
+#include "SFML/System/Time.hpp"
+#include "SFML/Graphics/CircleShape.hpp"
+
 // The Boid Class
 //
 // Attributes
@@ -28,18 +31,16 @@
 //  Pvector Cohesion(vector<Boid> Boids): Computes a vector that causes the
 //      current boid to seek the center of mass of nearby boids.
 
-class Boid
+class Boid : public sf::CircleShape
 {
 public:
-    bool predator;
-    Pvector location;
-    Pvector velocity;
-    Pvector acceleration;
-    float maxSpeed;
-    float maxForce;
-    Boid() {}
+    Boid();
     Boid(float x, float y);
     Boid(float x, float y, bool predCheck);
+
+public:
+    void Update(const sf::Time &dt);
+
     void applyForce(const Pvector &force);
     // Three Laws that boids follow
     Pvector Separation(const std::vector<Boid> &Boids);
@@ -47,9 +48,16 @@ public:
     Pvector Cohesion(const std::vector<Boid> &Boids);
     //Functions involving SFML and visualisation linking
     Pvector seek(const Pvector &v);
-    void run(const std::vector<Boid> &v);
-    void update();
+
     void flock(const std::vector<Boid> &v);
     void borders();
     float angle(const Pvector &v);
+
+private:
+    bool predator;
+    Pvector location;
+    Pvector velocity;
+    Pvector acceleration;
+    float maxSpeed;
+    float maxForce;
 };

@@ -19,16 +19,34 @@ const int window_width = desktopTemp.width;
 // ======== Boid Functions from Boid.h =========== //
 // =============================================== //
 
+Boid::Boid() : CircleShape(8, 3)
+{
+    setPosition(0.f, 0.f);
+    setOutlineColor(sf::Color(0, 255, 0));
+    setFillColor(sf::Color::Green);
+    setOutlineColor(sf::Color::White);
+    setOutlineThickness(1);
+    setRadius(3.f);
+}
+
 Boid::Boid(float x, float y)
+    : CircleShape(8, 3)
 {
     acceleration = Pvector(0, 0);
     velocity = Pvector(rand() % 3 - 2, rand() % 3 - 2);
     location = Pvector(x, y);
     maxSpeed = 3.5;
     maxForce = 0.5;
+
+    setPosition(x, y);
+    setOutlineColor(sf::Color(0, 255, 0));
+    setFillColor(sf::Color::Green);
+    setOutlineColor(sf::Color::White);
+    setOutlineThickness(1);
+    setRadius(3.f);
 }
 
-Boid::Boid(float x, float y, bool predCheck)
+Boid::Boid(float x, float y, bool predCheck) : CircleShape(8, 3)
 {
     predator = predCheck;
     if (predCheck == true)
@@ -45,6 +63,50 @@ Boid::Boid(float x, float y, bool predCheck)
     }
     acceleration = Pvector(0, 0);
     location = Pvector(x, y);
+
+    setPosition(x, y);
+    setOutlineColor(sf::Color(0, 255, 0));
+    setFillColor(sf::Color::Green);
+    setOutlineColor(sf::Color::White);
+    setOutlineThickness(1);
+    setRadius(3.f);
+}
+
+void Boid::Update(const sf::Time &dt)
+{
+    // Modifies velocity, location, and resets acceleration with values that
+    // are given by the three laws.
+
+    //To make the slow down not as abrupt
+    acceleration.mulScalar(.4);
+    // Update velocity
+    velocity.addVector(acceleration);
+    // Limit speed
+    velocity.limit(maxSpeed);
+    location.addVector(velocity);
+    // Reset accelertion to 0 each cycle
+    acceleration.mulScalar(0);
+
+    // Matches up the location of the shape to the boid
+    setPosition(location.x, location.y);
+
+    // Calculates the angle where the velocity is pointing so that the triangle turns towards it.
+    float theta = angle(velocity);
+    setRotation(theta);
+
+    // // Prevent boids from moving off the screen through wrapping
+    // // If boid exits right boundary
+    // if (m_shape.getPosition().x > m_windowWidth)
+    //     m_shape.setPosition(m_shape.getPosition().x - m_windowWidth, m_shape.getPosition().y);
+    // // If boid exits bottom boundary
+    // if (m_shape.getPosition().y > m_windowHeight)
+    //     m_shape.setPosition(m_shape.getPosition().x, m_shape.getPosition().y - m_windowHeight);
+    // // If boid exits left boundary
+    // if (m_shape.getPosition().x < 0)
+    //     m_shape.setPosition(m_shape.getPosition().x + m_windowWidth, m_shape.getPosition().y);
+    // // If boid exits top boundary
+    // if (m_shape.getPosition().y < 0)
+    //     m_shape.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + m_windowHeight);
 }
 
 // Adds force Pvector to current force Pvector
@@ -191,31 +253,6 @@ Pvector Boid::seek(const Pvector &v)
     acceleration.subTwoVector(desired, velocity);
     acceleration.limit(maxForce); // Limit to maximum steering force
     return acceleration;
-}
-
-// Modifies velocity, location, and resets acceleration with values that
-// are given by the three laws.
-void Boid::update()
-{
-    //To make the slow down not as abrupt
-    acceleration.mulScalar(.4);
-    // Update velocity
-    velocity.addVector(acceleration);
-    // Limit speed
-    velocity.limit(maxSpeed);
-    location.addVector(velocity);
-    // Reset accelertion to 0 each cycle
-    acceleration.mulScalar(0);
-}
-
-// Run flock() on the flock of boids.
-// This applies the three rules, modifies velocities accordingly, updates data,
-// and corrects boids which are sitting outside of the SFML window
-void Boid::run(const std::vector<Boid> &v)
-{
-    flock(v);
-    update();
-    borders();
 }
 
 // Applies the three laws to the flock of boids

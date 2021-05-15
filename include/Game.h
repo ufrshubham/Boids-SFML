@@ -12,14 +12,17 @@ public:
     void Run();
 
 private:
-    sf::RenderWindow window;
-    int window_width;
-    int window_height;
-
-    Flock flock;
-    float boidsSize;
-    std::vector<sf::CircleShape> shapes;
-
-    void Render();
     void HandleInput();
+    void Update(const sf::Time &dt);
+    void Render();
+
+private:
+    sf::RenderWindow m_window;
+    int m_windowWidth;
+    int m_windowHeight;
+
+    Flock m_flock;
+    float m_boidSize;
+
+    bool m_paused;
 };
