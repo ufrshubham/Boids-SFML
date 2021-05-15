@@ -1,9 +1,5 @@
 #include "Flock.h"
 
-// =============================================== //
-// ======== Flock Functions from Flock.h ========= //
-// =============================================== //
-
 Flock::Flock(float windowWidth, float windowHeight)
     : m_windowWidth(windowWidth),
       m_windowHeight(windowHeight)
@@ -40,19 +36,4 @@ void Flock::draw(sf::RenderTarget &target, sf::RenderStates states) const
     {
         target.draw(boid);
     }
-}
-
-int Flock::getSize()
-{
-    return m_boids.size();
-}
-
-Boid Flock::getBoid(int i)
-{
-    return m_boids[i];
-}
-
-void Flock::addBoid(const Boid &b)
-{
-    m_boids.push_back(std::move(b));
 }
