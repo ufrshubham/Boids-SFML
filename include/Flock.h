@@ -17,18 +17,24 @@
 class Flock : public sf::Drawable
 {
 public:
-    void Update(const sf::Time &dt);
+    Flock(float windowWidth, float windowHeight);
 
-private:
-    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void Update(const sf::Time &dt);
+    void CreateBoidAt(float x, float y);
 
 public:
     std::vector<Boid> m_boids;
-    //Constructors
-    Flock() {}
+
     // Accessor functions
     int getSize();
     Boid getBoid(int i);
     // Mutator Functions
     void addBoid(const Boid &b);
+
+private:
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+
+private:
+    float m_windowWidth;
+    float m_windowHeight;
 };

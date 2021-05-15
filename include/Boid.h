@@ -50,7 +50,7 @@ public:
     Pvector seek(const Pvector &v);
 
     void flock(const std::vector<Boid> &v);
-    void borders();
+    void borders(const float &w_width, const float &w_height);
     float angle(const Pvector &v);
 
 private:

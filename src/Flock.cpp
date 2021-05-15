@@ -4,6 +4,16 @@
 // ======== Flock Functions from Flock.h ========= //
 // =============================================== //
 
+Flock::Flock(float windowWidth, float windowHeight)
+    : m_windowWidth(windowWidth),
+      m_windowHeight(windowHeight)
+{
+    for (int i = 0; i < 250; i++)
+    {
+        m_boids.emplace_back(m_windowWidth / 3, m_windowHeight / 3);
+    }
+}
+
 void Flock::Update(const sf::Time &dt)
 {
     for (auto &boid : m_boids)
@@ -15,8 +25,13 @@ void Flock::Update(const sf::Time &dt)
         // and corrects boids which are sitting outside of the SFML window
         boid.flock(m_boids);
         boid.Update(dt);
-        boid.borders();
+        boid.borders(m_windowWidth, m_windowHeight);
     }
+}
+
+void Flock::CreateBoidAt(float x, float y)
+{
+    m_boids.emplace_back(Boid(x, y, false));
 }
 
 void Flock::draw(sf::RenderTarget &target, sf::RenderStates states) const

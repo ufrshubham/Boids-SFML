@@ -18,11 +18,9 @@ private:
 
 private:
     sf::RenderWindow m_window;
-    int m_windowWidth;
-    int m_windowHeight;
-
+    float m_windowWidth;
+    float m_windowHeight;
     Flock m_flock;
-    float m_boidSize;
-
     bool m_paused;
+    bool m_focused;
 };

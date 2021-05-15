@@ -5,14 +5,6 @@
 #include <cstdlib>
 #include <cmath>
 
-// Global Variables for borders()
-// desktopTemp gets screen resolution of PC running the program
-sf::VideoMode desktopTemp = sf::VideoMode::getDesktopMode();
-const int window_height = desktopTemp.height;
-const int window_width = desktopTemp.width;
-
-#define w_height window_height
-#define w_width window_width
 #define PI 3.141592635
 
 // =============================================== //
@@ -273,15 +265,15 @@ void Boid::flock(const std::vector<Boid> &v)
 
 // Checks if boids go out of the window and if so, wraps them around to
 // the other side.
-void Boid::borders()
+void Boid::borders(const float &w_width, const float &w_height)
 {
     if (location.x < 0)
         location.x += w_width;
     if (location.y < 0)
         location.y += w_height;
-    if (location.x > 1000)
+    if (location.x > w_width)
         location.x -= w_width;
-    if (location.y > 1000)
+    if (location.y > w_height)
         location.y -= w_height;
 }
 

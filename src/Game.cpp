@@ -4,18 +4,13 @@
 
 // Construct window using SFML
 Game::Game()
-    : m_window(sf::VideoMode::getDesktopMode(), "Boids-SFML", sf::Style::None),
-      m_windowWidth(m_window.getSize().x),
-      m_windowHeight(m_window.getSize().y),
-      m_flock(),
-      m_boidSize(3.f),
-      m_paused(false)
+    : m_window(sf::VideoMode(1280.f, 720.f), "Boids-SFML", sf::Style::Close),
+      m_windowWidth(1280.f),
+      m_windowHeight(720.f),
+      m_flock(1280.f, 720.f),
+      m_paused(false),
+      m_focused(true)
 {
-    for (int i = 0; i < 250; i++)
-    {
-        Boid b(m_windowWidth / 3, m_windowHeight / 3);
-        m_flock.addBoid(b);
-    }
 }
 
 void Game::Run()
@@ -50,22 +45,27 @@ void Game::HandleInput()
         case sf::Event::Closed:
             m_window.close();
             break;
+        case sf::Event::GainedFocus:
+            m_focused = true;
+            break;
+        case sf::Event::LostFocus:
+            m_focused = false;
+            break;
         default:
             break;
         }
     }
 
     // Real-time inputs.
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && m_focused)
     {
         m_window.close();
     }
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_focused)
     {
         const auto &mouseCoords = sf::Mouse::getPosition(m_window);
-        Boid b((float)mouseCoords.x, (float)mouseCoords.y, false);
-        m_flock.addBoid(b);
+        m_flock.CreateBoidAt((float)mouseCoords.x, (float)mouseCoords.y);
     }
 }
 
