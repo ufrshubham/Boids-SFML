@@ -38,14 +38,15 @@ public:
     Boid(float x, float y);
     Boid(float x, float y, bool predCheck);
 
-public:
     void Update(const sf::Time &dt);
 
     void applyForce(const Pvector &force);
+    
     // Three Laws that boids follow
     Pvector Separation(const std::vector<Boid> &Boids);
     Pvector Alignment(const std::vector<Boid> &Boids);
     Pvector Cohesion(const std::vector<Boid> &Boids);
+    
     //Functions involving SFML and visualisation linking
     Pvector seek(const Pvector &v);
 
@@ -55,9 +56,11 @@ public:
 
 private:
     bool predator;
+    
     Pvector location;
     Pvector velocity;
     Pvector acceleration;
+    
     float maxSpeed;
     float maxForce;
 };
