@@ -6,7 +6,7 @@ Flock::Flock(float windowWidth, float windowHeight)
 {
     for (int i = 0; i < 250; i++)
     {
-        m_boids.emplace_back(m_windowWidth / 3, m_windowHeight / 3);
+        m_boids.emplace_back(m_windowWidth / 2, m_windowHeight / 2);
     }
 }
 

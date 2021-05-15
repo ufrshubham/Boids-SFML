@@ -4,7 +4,7 @@
 
 // Construct window using SFML
 Game::Game()
-    : m_window(sf::VideoMode(1280.f, 720.f), "Boids-SFML", sf::Style::Close),
+    : m_window(sf::VideoMode(1280, 720), "Boids-SFML", sf::Style::Close),
       m_windowWidth(1280.f),
       m_windowHeight(720.f),
       m_flock(1280.f, 720.f),
@@ -51,17 +51,22 @@ void Game::HandleInput()
         case sf::Event::LostFocus:
             m_focused = false;
             break;
+        case sf::Event::KeyPressed:
+            if (event.key.code == sf::Keyboard::Key::Escape)
+            {
+                m_window.close();
+            }
+            else if (event.key.code == sf::Keyboard::Key::P)
+            {
+                m_paused = !m_paused;
+            }
+            break;
         default:
             break;
         }
     }
 
     // Real-time inputs.
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && m_focused)
-    {
-        m_window.close();
-    }
-
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && m_focused)
     {
         const auto &mouseCoords = sf::Mouse::getPosition(m_window);
