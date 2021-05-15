@@ -1,0 +1,5 @@
+# Exclude build files.
+build/
+
+# Exclude .vscode
+.vscode
