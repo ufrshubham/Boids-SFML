@@ -1,4 +1,3 @@
-#include "Boid.h"
 #include "Flock.h"
 
 // =============================================== //
@@ -15,14 +14,14 @@ Boid Flock::getBoid(int i)
     return flock[i];
 }
 
-void Flock::addBoid(const Boid& b)
+void Flock::addBoid(const Boid &b)
 {
     flock.push_back(std::move(b));
 }
 
 // Runs the run function for every boid in the flock checking against the flock
 // itself. Which in turn applies all the rules to the flock.
-void Flock::flocking() 
+void Flock::flocking()
 {
     for (int i = 0; i < flock.size(); i++)
         flock[i].run(flock);

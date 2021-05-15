@@ -1,10 +1,6 @@
-#include <iostream>
-#include "Flock.h"
-#include "Boid.h"
-#include "Pvector.h"
 #include "Game.h"
-#include "SFML/Window.hpp"
-#include "SFML/Graphics.hpp"
+
+#include "SFML/Window/Event.hpp"
 
 // Construct window using SFML
 Game::Game()
@@ -12,9 +8,9 @@ Game::Game()
     this->boidsSize = 3.0;
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     this->window_height = desktop.height;
-    this->window_width  = desktop.width;
+    this->window_width = desktop.width;
     this->window.create(sf::VideoMode(window_width, window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
-    
+
     // Try to achieve 60 FPS.
     window.setFramerateLimit(60);
 }
@@ -23,14 +19,15 @@ Game::Game()
 // input, and updates the view
 void Game::Run()
 {
-    for (int i = 0; i < 250; i++) {
+    for (int i = 0; i < 250; i++)
+    {
         Boid b(window_width / 3, window_height / 3); // Starts all boids in the center of the screen
         sf::CircleShape shape(8, 3);
 
         // Changing the Visual Properties of the shape
         // shape.setPosition(b.location.x, b.location.y); // Sets position of shape to random location that boid was set to.
         shape.setPosition(window_width, window_height); // Testing purposes, starts all shapes in the center of screen.
-        shape.setOutlineColor(sf::Color(0,255,0));
+        shape.setOutlineColor(sf::Color(0, 255, 0));
         shape.setFillColor(sf::Color::Green);
         shape.setOutlineColor(sf::Color::White);
         shape.setOutlineThickness(1);
@@ -40,7 +37,8 @@ void Game::Run()
         flock.addBoid(b);
         shapes.push_back(shape);
     }
-    while (window.isOpen()) {
+    while (window.isOpen())
+    {
         HandleInput();
         Render();
     }
@@ -49,7 +47,8 @@ void Game::Run()
 void Game::HandleInput()
 {
     sf::Event event;
-    while (window.pollEvent(event)) {
+    while (window.pollEvent(event))
+    {
         // "close requested" event: we close the window
         // Implemented alternate ways to close the window. (Pressing the escape, X, and BackSpace key also close the program.)
         if ((event.type == sf::Event::Closed) ||
@@ -59,17 +58,18 @@ void Game::HandleInput()
              event.key.code == sf::Keyboard::BackSpace) ||
             (event.type == sf::Event::KeyPressed &&
              event.key.code == sf::Keyboard::X))
-             {
+        {
             window.close();
         }
     }
 
     // Check for mouse click, draws and adds boid to flock if so.
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
         // Gets mouse coordinates, sets that as the location of the boid and the shape
         sf::Vector2i mouseCoords = sf::Mouse::getPosition(window);
         Boid b(mouseCoords.x, mouseCoords.y, false);
-        sf::CircleShape shape(10,3);
+        sf::CircleShape shape(10, 3);
 
         // Changing visual properties of newly created boid
         shape.setPosition(mouseCoords.x, mouseCoords.y);
@@ -84,7 +84,7 @@ void Game::HandleInput()
         shapes.push_back(shape);
 
         // New Shape is drawn
-        window.draw(shapes[shapes.size()-1]);
+        window.draw(shapes[shapes.size() - 1]);
     }
 }
 
@@ -93,7 +93,8 @@ void Game::Render()
     window.clear();
 
     // Draws all of the Boids out, and applies functions that are needed to update.
-    for (int i = 0; i < shapes.size(); i++) {
+    for (int i = 0; i < shapes.size(); i++)
+    {
         window.draw(shapes[i]);
 
         //cout << "Boid "<< i <<" Coordinates: (" << shapes[i].getPosition().x << ", " << shapes[i].getPosition().y << ")" << endl;

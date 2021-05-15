@@ -1,10 +1,9 @@
-#include "Pvector.h"
-#include <vector>
-#include <stdlib.h>
-#include <iostream>
+#pragma once
 
-#ifndef BOID_H_
-#define BOID_H_
+#include "Pvector.h"
+#include "Boid.h"
+
+#include <vector>
 
 // The Boid Class
 //
@@ -29,7 +28,8 @@
 //  Pvector Cohesion(vector<Boid> Boids): Computes a vector that causes the
 //      current boid to seek the center of mass of nearby boids.
 
-class Boid {
+class Boid
+{
 public:
     bool predator;
     Pvector location;
@@ -40,18 +40,16 @@ public:
     Boid() {}
     Boid(float x, float y);
     Boid(float x, float y, bool predCheck);
-    void applyForce(const Pvector& force);
+    void applyForce(const Pvector &force);
     // Three Laws that boids follow
-    Pvector Separation(const vector<Boid>& Boids);
-    Pvector Alignment(const vector<Boid>& Boids);
-    Pvector Cohesion(const vector<Boid>& Boids);
+    Pvector Separation(const std::vector<Boid> &Boids);
+    Pvector Alignment(const std::vector<Boid> &Boids);
+    Pvector Cohesion(const std::vector<Boid> &Boids);
     //Functions involving SFML and visualisation linking
-    Pvector seek(const Pvector& v);
-    void run(const vector<Boid>& v);
+    Pvector seek(const Pvector &v);
+    void run(const std::vector<Boid> &v);
     void update();
-    void flock(const vector<Boid>& v);
+    void flock(const std::vector<Boid> &v);
     void borders();
-    float angle(const Pvector& v);
+    float angle(const Pvector &v);
 };
-
-#endif
