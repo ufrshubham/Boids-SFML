@@ -5,9 +5,9 @@
 // Construct window using SFML
 Game::Game()
     : m_window(sf::VideoMode(1280, 720), "Boids-SFML", sf::Style::Close),
-      m_windowWidth(1280.f),
-      m_windowHeight(720.f),
-      m_flock(1280.f, 720.f),
+      m_windowWidth((float)m_window.getSize().x),
+      m_windowHeight((float)m_window.getSize().y),
+      m_flock((float)m_window.getSize().x, (float)m_window.getSize().y),
       m_paused(false),
       m_focused(true)
 {
