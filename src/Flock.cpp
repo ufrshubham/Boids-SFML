@@ -4,30 +4,42 @@ Flock::Flock(float windowWidth, float windowHeight)
     : m_windowWidth(windowWidth),
       m_windowHeight(windowHeight)
 {
-    for (int i = 0; i < 250; i++)
+    // Randomly place boids in the world.
+    for (int i = 0; i < 100; i++)
     {
-        m_boids.emplace_back(m_windowWidth / 2, m_windowHeight / 2);
+        m_boids.emplace_back(rand() % (int)m_windowWidth, rand() % (int)m_windowHeight);
     }
 }
 
 void Flock::Update(const sf::Time &dt)
 {
+    // To save looping over all the boids in Boid::Coh() just to
+    // figure out the perceived center.
+    sf::Vector2f sumOfPosition;
+    sf::Vector2f sumOfVelocities;
+    for (const auto &boid : m_boids)
+    {
+        sumOfPosition.x += boid.getPosition().x;
+        sumOfPosition.y += boid.getPosition().y;
+
+        sumOfVelocities.x += boid.GetVelocity().x;
+        sumOfVelocities.y += boid.GetVelocity().y;
+    }
+
     for (auto &boid : m_boids)
     {
-        // Runs the run function for every boid in the flock checking against the flock
-        // itself. Which in turn applies all the rules to the flock.
-        // Run flock() on the flock of boids.
-        // This applies the three rules, modifies velocities accordingly, updates data,
-        // and corrects boids which are sitting outside of the SFML window
-        boid.flock(m_boids);
+        boid.Coh(m_boids, sumOfPosition);
+        boid.Sep(m_boids);
+        boid.Ali(m_boids, sumOfVelocities);
+
         boid.Update(dt);
-        boid.borders(m_windowWidth, m_windowHeight);
+        boid.Borders(m_windowWidth, m_windowHeight);
     }
 }
 
 void Flock::CreateBoidAt(float x, float y)
 {
-    m_boids.emplace_back(Boid(x, y, false));
+    m_boids.emplace_back(Boid(x, y));
 }
 
 void Flock::draw(sf::RenderTarget &target, sf::RenderStates states) const
