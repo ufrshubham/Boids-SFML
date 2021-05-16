@@ -7,10 +7,6 @@
 
 #define PI 3.141592635
 
-// =============================================== //
-// ======== Boid Functions from Boid.h =========== //
-// =============================================== //
-
 Boid::Boid() : CircleShape(8, 3)
 {
     setPosition(0.f, 0.f);
@@ -22,7 +18,7 @@ Boid::Boid() : CircleShape(8, 3)
 }
 
 Boid::Boid(float x, float y)
-    : CircleShape(8, 3)
+    : CircleShape(8, 3), m_velocity(20.f, 20.f)
 {
     acceleration = Pvector(0, 0);
     velocity = Pvector(rand() % 3 - 2, rand() % 3 - 2);
@@ -38,7 +34,7 @@ Boid::Boid(float x, float y)
     setRadius(3.f);
 }
 
-Boid::Boid(float x, float y, bool predCheck) : CircleShape(8, 3)
+Boid::Boid(float x, float y, bool predCheck) : CircleShape(8, 3), m_velocity(20.f, 20.f)
 {
     predator = predCheck;
     if (predCheck == true)
@@ -66,39 +62,38 @@ Boid::Boid(float x, float y, bool predCheck) : CircleShape(8, 3)
 
 void Boid::Update(const sf::Time &dt)
 {
-    // Modifies velocity, location, and resets acceleration with values that
-    // are given by the three laws.
+    // // Modifies velocity, location, and resets acceleration with values that
+    // // are given by the three laws.
 
-    //To make the slow down not as abrupt
-    acceleration.mulScalar(.4);
-    // Update velocity
-    velocity.addVector(acceleration);
-    // Limit speed
-    velocity.limit(maxSpeed);
-    location.addVector(velocity);
-    // Reset accelertion to 0 each cycle
-    acceleration.mulScalar(0);
+    // //To make the slow down not as abrupt
+    // acceleration.mulScalar(.4);
+    // // Update velocity
+    // velocity.addVector(acceleration);
+    // // Limit speed
+    // velocity.limit(maxSpeed);
+    // location.addVector(velocity);
+    // // Reset accelertion to 0 each cycle
+    // acceleration.mulScalar(0);
 
-    // Matches up the location of the shape to the boid
-    setPosition(location.x, location.y);
+    // // Matches up the location of the shape to the boid
+    // setPosition(location.x, location.y);
 
-    // Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-    float theta = angle(velocity);
-    setRotation(theta);
+    // // Calculates the angle where the velocity is pointing so that the triangle turns towards it.
+    // float theta = angle(velocity);
+    // setRotation(theta);
+    const float magSquared = ((m_velocity.x * m_velocity.x) + (m_velocity.y * m_velocity.y));
+    if ((magSquared) > (speedLimit * speedLimit))
+    {
+        const auto mag = std::sqrt(magSquared);
+        m_velocity.x /= mag;
+        m_velocity.y /= mag;
+    }
 
-    // // Prevent boids from moving off the screen through wrapping
-    // // If boid exits right boundary
-    // if (m_shape.getPosition().x > m_windowWidth)
-    //     m_shape.setPosition(m_shape.getPosition().x - m_windowWidth, m_shape.getPosition().y);
-    // // If boid exits bottom boundary
-    // if (m_shape.getPosition().y > m_windowHeight)
-    //     m_shape.setPosition(m_shape.getPosition().x, m_shape.getPosition().y - m_windowHeight);
-    // // If boid exits left boundary
-    // if (m_shape.getPosition().x < 0)
-    //     m_shape.setPosition(m_shape.getPosition().x + m_windowWidth, m_shape.getPosition().y);
-    // // If boid exits top boundary
-    // if (m_shape.getPosition().y < 0)
-    //     m_shape.setPosition(m_shape.getPosition().x, m_shape.getPosition().y + m_windowHeight);
+    move(m_velocity * dt.asSeconds());
+
+    // Still need to check this math.
+    float angle = (float)(std::atan2(m_velocity.x, -m_velocity.y) * 180 / PI);
+    this->setRotation(angle);
 }
 
 // Adds force Pvector to current force Pvector
@@ -252,29 +247,49 @@ void Boid::flock(const std::vector<Boid> &v)
 {
     Pvector sep = Separation(v);
     Pvector ali = Alignment(v);
-    Pvector coh = Cohesion(v);
+    // Pvector coh = Cohesion(v);
     // Arbitrarily weight these forces
     sep.mulScalar(1.5);
     ali.mulScalar(1.0); // Might need to alter weights for different characteristics
-    coh.mulScalar(1.0);
+    // coh.mulScalar(1.0);
     // Add the force vectors to acceleration
     applyForce(sep);
     applyForce(ali);
-    applyForce(coh);
+    // applyForce(coh);
 }
 
 // Checks if boids go out of the window and if so, wraps them around to
 // the other side.
 void Boid::borders(const float &w_width, const float &w_height)
 {
-    if (location.x < 0)
-        location.x += w_width;
-    if (location.y < 0)
-        location.y += w_height;
-    if (location.x > w_width)
-        location.x -= w_width;
-    if (location.y > w_height)
-        location.y -= w_height;
+    const auto &position = this->getPosition();
+    sf::Vector2f newPosition(position);
+    if (position.x < 0)
+    {
+        newPosition.x += w_width;
+    }
+    if (position.y < 0)
+    {
+        newPosition.y += w_height;
+    }
+    if (position.x > w_width)
+    {
+        newPosition.x -= w_width;
+    }
+    if (position.y > w_height)
+    {
+        newPosition.y -= w_height;
+    }
+    this->setPosition(newPosition);
+
+    // if (location.x < 0)
+    //     location.x += w_width;
+    // if (location.y < 0)
+    //     location.y += w_height;
+    // if (location.x > w_width)
+    //     location.x -= w_width;
+    // if (location.y > w_height)
+    //     location.y -= w_height;
 }
 
 // Calculates the angle for the velocity of a boid which allows the visual
@@ -284,4 +299,75 @@ float Boid::angle(const Pvector &v)
     // From the definition of the dot product
     float angle = (float)(atan2(v.x, -v.y) * 180 / PI);
     return angle;
+}
+
+const sf::Vector2f &Boid::GetVelocity() const
+{
+    return m_velocity;
+}
+
+void Boid::SetVelocity(const sf::Vector2f &velocity)
+{
+    m_velocity.x = velocity.x;
+    m_velocity.y = velocity.y;
+}
+
+void Boid::Accelerate(const sf::Vector2f &velocity)
+{
+    SetVelocity(GetVelocity() + velocity);
+}
+
+void Boid::Sep(const std::vector<Boid> boids)
+{
+    const auto &myPosition = this->getPosition();
+    for (const auto &boid : boids)
+    {
+        // Ignore self.
+        if (this != &boid)
+        {
+            const auto &otherPosition = boid.getPosition();
+
+            const auto &distanceVector = otherPosition - myPosition;
+            float squaredDistance = ((distanceVector.x) * (distanceVector.x) + (distanceVector.y) * (distanceVector.y));
+
+            if (squaredDistance < 400)
+            {
+                Accelerate(-distanceVector);
+            }
+        }
+    }
+}
+
+void Boid::Coh(const std::vector<Boid> boids)
+{
+    int nBoids = 0;
+    auto avg = sf::Vector2f(0.f, 0.f);
+
+    const auto &myPosition = this->getPosition();
+
+    for (const auto &boid : boids)
+    {
+        if (this != &boid)
+        {
+            const auto &otherPosition = boid.getPosition();
+
+            const auto &distanceVector = otherPosition - myPosition;
+            float squaredDistance = ((distanceVector.x) * (distanceVector.x) + (distanceVector.y) * (distanceVector.y));
+
+            if (squaredDistance < 2500)
+            {
+                avg.x += otherPosition.x;
+                avg.y += otherPosition.y;
+                ++nBoids;
+            }
+        }
+    }
+    if (nBoids != 0)
+    {
+        avg.x /= nBoids;
+        avg.y /= nBoids;
+
+        const auto &direction = avg - myPosition;
+        Accelerate(direction);
+    }
 }

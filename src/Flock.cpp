@@ -4,7 +4,7 @@ Flock::Flock(float windowWidth, float windowHeight)
     : m_windowWidth(windowWidth),
       m_windowHeight(windowHeight)
 {
-    for (int i = 0; i < 250; i++)
+    for (int i = 0; i < 50; i++)
     {
         m_boids.emplace_back(m_windowWidth / 2, m_windowHeight / 2);
     }
@@ -19,7 +19,9 @@ void Flock::Update(const sf::Time &dt)
         // Run flock() on the flock of boids.
         // This applies the three rules, modifies velocities accordingly, updates data,
         // and corrects boids which are sitting outside of the SFML window
-        boid.flock(m_boids);
+        // boid.flock(m_boids);
+        boid.Sep(m_boids);
+        boid.Coh(m_boids);
         boid.Update(dt);
         boid.borders(m_windowWidth, m_windowHeight);
     }

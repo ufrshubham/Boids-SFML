@@ -41,12 +41,12 @@ public:
     void Update(const sf::Time &dt);
 
     void applyForce(const Pvector &force);
-    
+
     // Three Laws that boids follow
     Pvector Separation(const std::vector<Boid> &Boids);
     Pvector Alignment(const std::vector<Boid> &Boids);
     Pvector Cohesion(const std::vector<Boid> &Boids);
-    
+
     //Functions involving SFML and visualisation linking
     Pvector seek(const Pvector &v);
 
@@ -54,13 +54,24 @@ public:
     void borders(const float &w_width, const float &w_height);
     float angle(const Pvector &v);
 
+    const sf::Vector2f &GetVelocity() const;
+    void SetVelocity(const sf::Vector2f &velocity);
+    void Accelerate(const sf::Vector2f &velocity);
+
+    void Sep(const std::vector<Boid> boids);
+    void Coh(const std::vector<Boid> boids);
+
 private:
     bool predator;
-    
+
     Pvector location;
     Pvector velocity;
     Pvector acceleration;
-    
+
+    sf::Vector2f m_velocity;
+
+    const float speedLimit = 400.f;
+
     float maxSpeed;
     float maxForce;
 };
