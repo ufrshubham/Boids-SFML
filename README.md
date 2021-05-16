@@ -16,7 +16,7 @@ A boids simulation made using C++ and SFML.
 
 ```bash
 # Clone this project
-$ git clone --resursive git@github.com:ufrshubham/Boids-SFML.git
+$ git clone --recursive git@github.com:ufrshubham/Boids-SFML.git
 
 # Go to project root
 $ cd Boids-SFML/
