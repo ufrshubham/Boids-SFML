@@ -5,9 +5,9 @@ Flock::Flock(float windowWidth, float windowHeight)
       m_windowHeight(windowHeight)
 {
     // Randomly place boids in the world.
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 200; i++)
     {
-        m_boids.emplace_back(rand() % (int)m_windowWidth, rand() % (int)m_windowHeight);
+        m_boids.emplace_back(rand() % (int)m_windowWidth + 1, rand() % (int)m_windowHeight + 1);
     }
 }
 

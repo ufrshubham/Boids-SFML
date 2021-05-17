@@ -21,9 +21,9 @@ public:
     void Accelerate(const sf::Vector2f &velocity);
     void Borders(const float &w_width, const float &w_height);
 
-    void Sep(const std::vector<Boid> boids);
-    void Coh(const std::vector<Boid> boids, const sf::Vector2f &sumOfPosition);
-    void Ali(const std::vector<Boid> boids, const sf::Vector2f &sumOfVelocities);
+    void Sep(const std::vector<Boid> &boids);
+    void Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition);
+    void Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities);
 
 private:
     sf::Vector2f m_velocity;
