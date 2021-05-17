@@ -5,8 +5,6 @@
 #include <cstdlib>
 #include <cmath>
 
-#define PI 3.141592635
-
 Boid::Boid() : CircleShape(8, 3)
 {
     setPosition(0.f, 0.f);
@@ -41,12 +39,10 @@ void Boid::Update(const sf::Time &dt)
     move(m_velocity * dt.asSeconds());
 
     // Still need to check this math.
-    float angle = (float)(std::atan2(m_velocity.x, -m_velocity.y) * 180 / PI);
+    float angle = (float)(std::atan2(m_velocity.x, -m_velocity.y) * 57.295778);
     this->setRotation(angle);
 }
 
-// Checks if boids go out of the window and if so, wraps them around to
-// the other side.
 void Boid::Borders(const float &w_width, const float &w_height)
 {
     const auto &position = this->getPosition();
@@ -86,7 +82,7 @@ void Boid::Accelerate(const sf::Vector2f &velocity)
     SetVelocity(GetVelocity() + velocity);
 }
 
-void Boid::Sep(const std::vector<Boid> boids)
+void Boid::Sep(const std::vector<Boid> &boids)
 {
     const auto &myPosition = this->getPosition();
     sf::Vector2f acceleration;
@@ -110,7 +106,7 @@ void Boid::Sep(const std::vector<Boid> boids)
     Accelerate(acceleration);
 }
 
-void Boid::Coh(const std::vector<Boid> boids, const sf::Vector2f &sumOfPosition)
+void Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition)
 {
     const auto &myPosition = this->getPosition();
     auto cg = (sumOfPosition - myPosition);
@@ -123,7 +119,7 @@ void Boid::Coh(const std::vector<Boid> boids, const sf::Vector2f &sumOfPosition)
     Accelerate(acceleration);
 }
 
-void Boid::Ali(const std::vector<Boid> boids, const sf::Vector2f &sumOfVelocities)
+void Boid::Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities)
 {
     const auto &myVelocity = this->GetVelocity();
 
@@ -132,7 +128,7 @@ void Boid::Ali(const std::vector<Boid> boids, const sf::Vector2f &sumOfVelocitie
     cg.y /= (boids.size() - 1);
 
     auto acceleration = (cg - this->GetVelocity());
-    acceleration.x /= 100;
-    acceleration.y /= 100;
+    acceleration.x /= 50;
+    acceleration.y /= 50;
     Accelerate(acceleration);
 }
