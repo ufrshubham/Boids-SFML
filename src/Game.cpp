@@ -9,7 +9,8 @@ Game::Game()
       m_windowHeight((float)m_window.getSize().y),
       m_flock((float)m_window.getSize().x, (float)m_window.getSize().y),
       m_paused(false),
-      m_focused(true)
+      m_focused(true),
+      m_backgroundColor(201, 194, 156)
 {
 }
 
@@ -81,7 +82,7 @@ void Game::Update(const sf::Time &dt)
 
 void Game::Render()
 {
-    m_window.clear();
+    m_window.clear(m_backgroundColor);
     m_window.draw(m_flock);
     m_window.display();
 }

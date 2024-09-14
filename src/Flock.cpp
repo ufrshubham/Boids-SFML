@@ -28,12 +28,14 @@ void Flock::Update(const sf::Time &dt)
 
     for (auto &boid : m_boids)
     {
-        boid.Coh(m_boids, sumOfPosition);
-        boid.Sep(m_boids);
-        boid.Ali(m_boids, sumOfVelocities);
+        sf::Vector2f acceleration;
+        acceleration += boid.Coh(m_boids, sumOfPosition);
+        acceleration += boid.Sep(m_boids);
+        acceleration += boid.Ali(m_boids, sumOfVelocities);
+        boid.Accelerate(acceleration);
 
         boid.Update(dt);
-        boid.Borders(m_windowWidth, m_windowHeight);
+        boid.Borders(m_windowWidth, m_windowHeight, false);
     }
 }
 

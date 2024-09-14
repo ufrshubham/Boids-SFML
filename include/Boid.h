@@ -18,13 +18,14 @@ public:
     const sf::Vector2f &GetVelocity() const;
     void SetVelocity(const sf::Vector2f &velocity);
     void Accelerate(const sf::Vector2f &velocity);
-    void Borders(const float &w_width, const float &w_height);
+    void Borders(const float &w_width, const float &w_height, bool wrap);
 
-    void Sep(const std::vector<Boid> &boids);
-    void Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition);
-    void Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities);
+    sf::Vector2f Sep(const std::vector<Boid> &boids);
+    sf::Vector2f Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition);
+    sf::Vector2f Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities);
 
 private:
     sf::Vector2f m_velocity;
-    const float speedLimit = 400.f;
+    const float m_speedLimit = 400.f;
+    static const sf::Color s_boidColor;
 };

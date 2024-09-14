@@ -5,13 +5,15 @@
 #include <cstdlib>
 #include <cmath>
 
+const sf::Color Boid::s_boidColor = sf::Color(235, 234, 233);
+
 Boid::Boid() : CircleShape(8, 3)
 {
     setPosition(0.f, 0.f);
     setOutlineColor(sf::Color(0, 255, 0));
-    setFillColor(sf::Color::Green);
-    setOutlineColor(sf::Color::White);
-    setOutlineThickness(1);
+    setFillColor(s_boidColor);
+    setOutlineColor(sf::Color::Black);
+    setOutlineThickness(2);
     setRadius(3.f);
 }
 
@@ -20,16 +22,16 @@ Boid::Boid(float x, float y)
 {
     setPosition(x, y);
     setOutlineColor(sf::Color(0, 255, 0));
-    setFillColor(sf::Color::Green);
-    setOutlineColor(sf::Color::White);
-    setOutlineThickness(1);
+    setFillColor(s_boidColor);
+    setOutlineColor(sf::Color::Black);
+    setOutlineThickness(2);
     setRadius(3.f);
 }
 
 void Boid::Update(const sf::Time &dt)
 {
     const float magSquared = ((m_velocity.x * m_velocity.x) + (m_velocity.y * m_velocity.y));
-    if ((magSquared) > (speedLimit * speedLimit))
+    if ((magSquared) > (m_speedLimit * m_speedLimit))
     {
         const auto mag = std::sqrt(magSquared);
         m_velocity.x /= mag;
@@ -43,25 +45,53 @@ void Boid::Update(const sf::Time &dt)
     this->setRotation(angle);
 }
 
-void Boid::Borders(const float &w_width, const float &w_height)
+void Boid::Borders(const float &w_width, const float &w_height, bool wrap)
 {
     const auto &position = this->getPosition();
     sf::Vector2f newPosition(position);
     if (position.x < 0)
     {
-        newPosition.x += w_width;
+        if (wrap)
+        {
+            newPosition.x += w_width;
+        }
+        else
+        {
+            m_velocity.x = -m_velocity.x;
+        }
     }
     if (position.y < 0)
     {
-        newPosition.y += w_height;
+        if (wrap)
+        {
+            newPosition.y += w_height;
+        }
+        else
+        {
+            m_velocity.y = -m_velocity.y;
+        }
     }
     if (position.x > w_width)
     {
-        newPosition.x -= w_width;
+        if (wrap)
+        {
+            newPosition.x -= w_width;
+        }
+        else
+        {
+            m_velocity.x = -m_velocity.x;
+        }
     }
     if (position.y > w_height)
     {
-        newPosition.y -= w_height;
+        if (wrap)
+        {
+            newPosition.y -= w_height;
+        }
+        else
+        {
+            m_velocity.y = -m_velocity.y;
+        }
     }
     this->setPosition(newPosition);
 }
@@ -82,7 +112,7 @@ void Boid::Accelerate(const sf::Vector2f &velocity)
     SetVelocity(GetVelocity() + velocity);
 }
 
-void Boid::Sep(const std::vector<Boid> &boids)
+sf::Vector2f Boid::Sep(const std::vector<Boid> &boids)
 {
     const auto &myPosition = this->getPosition();
     sf::Vector2f acceleration;
@@ -103,10 +133,10 @@ void Boid::Sep(const std::vector<Boid> &boids)
             }
         }
     }
-    Accelerate(acceleration);
+    return acceleration * 1.5f;
 }
 
-void Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition)
+sf::Vector2f Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition)
 {
     const auto &myPosition = this->getPosition();
     auto cg = (sumOfPosition - myPosition);
@@ -116,10 +146,10 @@ void Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition
     auto acceleration = (cg - this->getPosition());
     acceleration.x /= 100;
     acceleration.y /= 100;
-    Accelerate(acceleration);
+    return acceleration * 0.2f;
 }
 
-void Boid::Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities)
+sf::Vector2f Boid::Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities)
 {
     const auto &myVelocity = this->GetVelocity();
 
@@ -130,5 +160,5 @@ void Boid::Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelociti
     auto acceleration = (cg - this->GetVelocity());
     acceleration.x /= 50;
     acceleration.y /= 50;
-    Accelerate(acceleration);
+    return acceleration * 0.1f;
 }
