@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Boid.h"
+#include "Boid.hpp"
 
 #include "SFML/System/Time.hpp"
 #include "SFML/Graphics/Drawable.hpp"

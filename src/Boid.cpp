@@ -1,4 +1,4 @@
-#include "Boid.h"
+#include "Boid.hpp"
 
 #include "SFML/Window/VideoMode.hpp"
 
@@ -15,10 +15,11 @@ Boid::Boid() : CircleShape(8, 3)
     setOutlineColor(sf::Color::Black);
     setOutlineThickness(2);
     setRadius(3.f);
+    setOrigin(3.f, 3.f);
 }
 
 Boid::Boid(float x, float y)
-    : CircleShape(8, 3), m_velocity(rand() % (int)x, rand() % (int)y)
+    : CircleShape(8, 3), m_velocity((rand() % 400) - 200, (rand() % 400) - 200)
 {
     setPosition(x, y);
     setOutlineColor(sf::Color(0, 255, 0));
@@ -26,6 +27,7 @@ Boid::Boid(float x, float y)
     setOutlineColor(sf::Color::Black);
     setOutlineThickness(2);
     setRadius(3.f);
+    setOrigin(3.f, 3.f);
 }
 
 void Boid::Update(const sf::Time &dt)
@@ -57,6 +59,7 @@ void Boid::Borders(const float &w_width, const float &w_height, bool wrap)
         }
         else
         {
+            newPosition.x = 0;
             m_velocity.x = -m_velocity.x;
         }
     }
@@ -68,6 +71,7 @@ void Boid::Borders(const float &w_width, const float &w_height, bool wrap)
         }
         else
         {
+            newPosition.y = 0;
             m_velocity.y = -m_velocity.y;
         }
     }
@@ -79,6 +83,7 @@ void Boid::Borders(const float &w_width, const float &w_height, bool wrap)
         }
         else
         {
+            newPosition.x = w_width;
             m_velocity.x = -m_velocity.x;
         }
     }
@@ -90,6 +95,7 @@ void Boid::Borders(const float &w_width, const float &w_height, bool wrap)
         }
         else
         {
+            newPosition.y = w_height;
             m_velocity.y = -m_velocity.y;
         }
     }
@@ -138,6 +144,7 @@ sf::Vector2f Boid::Sep(const std::vector<Boid> &boids)
 
 sf::Vector2f Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOfPosition)
 {
+    if (boids.size() <= 1) return sf::Vector2f(0.f, 0.f);
     const auto &myPosition = this->getPosition();
     auto cg = (sumOfPosition - myPosition);
     cg.x /= (boids.size() - 1);
@@ -151,6 +158,7 @@ sf::Vector2f Boid::Coh(const std::vector<Boid> &boids, const sf::Vector2f &sumOf
 
 sf::Vector2f Boid::Ali(const std::vector<Boid> &boids, const sf::Vector2f &sumOfVelocities)
 {
+    if (boids.size() <= 1) return sf::Vector2f(0.f, 0.f);
     const auto &myVelocity = this->GetVelocity();
 
     auto cg = (sumOfVelocities - myVelocity);

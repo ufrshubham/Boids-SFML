@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Boid.h"
-
 #include <vector>
 
 #include "SFML/System/Time.hpp"

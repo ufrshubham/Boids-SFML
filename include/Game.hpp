@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Flock.h"
+#include "Flock.hpp"
 
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "SFML/Graphics/CircleShape.hpp"

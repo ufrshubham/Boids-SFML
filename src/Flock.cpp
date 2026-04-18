@@ -1,4 +1,4 @@
-#include "Flock.h"
+#include "Flock.hpp"
 
 Flock::Flock(float windowWidth, float windowHeight)
     : m_windowWidth(windowWidth),

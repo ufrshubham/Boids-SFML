@@ -12,12 +12,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin/)
 add_subdirectory(vendors/sfml/)
 
 # GLOB all the source and header files.
-file(GLOB SPACESCAPE_SOURCE_FILES src/*.cpp)
-file(GLOB SPACESCAPE_HEADER_FILES include/*.hpp)
-file(GLOB SPACESCAPE_ASSET_FILES assets/*.png)
+file(GLOB BOIDS_SOURCE_FILES src/*.cpp)
+file(GLOB BOIDS_HEADER_FILES include/*.hpp)
+file(GLOB BOIDS_ASSET_FILES assets/*.png)
 
 # Add the main target.
-add_executable(${PROJECT_NAME} ${SPACESCAPE_SOURCE_FILES} ${SPACESCAPE_HEADER_FILES})
+add_executable(${PROJECT_NAME} ${BOIDS_SOURCE_FILES} ${BOIDS_HEADER_FILES})
 
 # Include directories for main target.
 target_include_directories(
